@@ -5,7 +5,6 @@ public class Player : MonoBehaviour
 {
     public PlayerSpriteRenderer smallRenderer;
     public PlayerSpriteRenderer bigRenderer;
-
     private DeathAnimation deathAnimation;
 
     public bool big => bigRenderer.enabled;
