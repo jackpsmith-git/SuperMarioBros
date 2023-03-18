@@ -50,5 +50,14 @@ public class EntityMovement : MonoBehaviour
         {
             velocity.y = Mathf.Max(velocity.y, 0f);
         }
+
+        if (direction.x > 0f)
+        {
+            transform.localEulerAngles = new Vector3(0f, 180f, 0f);
+        }
+        else if (direction.x < 0f)
+        {
+            transform.localEulerAngles = Vector3.zero;
+        }
     }
 }

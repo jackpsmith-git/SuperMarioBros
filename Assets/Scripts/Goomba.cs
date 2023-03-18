@@ -10,7 +10,11 @@ public class Goomba : MonoBehaviour
         {
             Player player = collision.gameObject.GetComponent<Player>();
 
-            if (collision.transform.DotTest(transform, Vector2.down))
+            if (player.starpower)
+            {
+                Hit();
+            }
+            else if (collision.transform.DotTest(transform, Vector2.down))
             {
                 flatten();
             }
@@ -42,6 +46,7 @@ public class Goomba : MonoBehaviour
     {
         GetComponent<AnimatedSprite>().enabled = false;
         GetComponent<DeathAnimation>().enabled = true;
+        GetComponent<SpriteRenderer>().flipY = true;
         Destroy(gameObject, 3f);
     }
 }
