@@ -3,6 +3,12 @@ using UnityEngine;
 public class Goomba : MonoBehaviour
 {
     public Sprite flatSprite;
+    private GameManager gameManager;
+
+    private void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -13,10 +19,12 @@ public class Goomba : MonoBehaviour
             if (player.starpower)
             {
                 Hit();
+                gameManager.score = gameManager.score + 500;
             }
             else if (collision.transform.DotTest(transform, Vector2.down))
             {
                 flatten();
+                gameManager.score = gameManager.score + 100;
             }
             else
             {
@@ -30,6 +38,7 @@ public class Goomba : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Shell"))
         {
             Hit();
+            gameManager.score = gameManager.score + 800;
         }
     }
 

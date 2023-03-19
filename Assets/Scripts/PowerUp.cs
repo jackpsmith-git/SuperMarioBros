@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
+    private GameManager gameManager;
+
     public enum Type
     {
         Coin,
@@ -12,11 +14,17 @@ public class PowerUp : MonoBehaviour
 
     public Type type;
 
+    private void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             Collect(other.gameObject);
+            gameManager.score = gameManager.score + 1000;
         }
     }
 

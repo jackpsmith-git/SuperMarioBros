@@ -2,11 +2,17 @@ using UnityEngine;
 
 public class Koopa : MonoBehaviour
 {
+    private GameManager gameManager;
     public Sprite shellSprite;
     public float shellSpeed = 12f;
 
     private bool shelled;
     private bool pushed;
+
+    private void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -17,10 +23,12 @@ public class Koopa : MonoBehaviour
             if (player.starpower)
             {
                 Hit();
+                gameManager.score = gameManager.score + 500;
             }
             else if (collision.transform.DotTest(transform, Vector2.down))
             {
                 EnterShell();
+                gameManager.score = gameManager.score + 100;
             }
             else
             {
@@ -37,6 +45,7 @@ public class Koopa : MonoBehaviour
             {
                 Vector2 direction = new Vector2(transform.position.x - other.transform.position.x, 0f);
                 PushShell(direction);
+                gameManager.score = gameManager.score + 800;
             }
             else
             {
@@ -45,6 +54,7 @@ public class Koopa : MonoBehaviour
                 if (player.starpower)
                 {
                     Hit();
+                    gameManager.score = gameManager.score + 500;
                 }
                 else
                 {
@@ -55,6 +65,7 @@ public class Koopa : MonoBehaviour
         else if (!shelled && other.gameObject.layer == LayerMask.NameToLayer("Shell"))
         {
             Hit();
+            gameManager.score = gameManager.score + 800;
         }
     }
 
