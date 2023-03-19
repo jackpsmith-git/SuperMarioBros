@@ -21,6 +21,12 @@ public class SideScrolling : MonoBehaviour
         Vector3 cameraPosition = transform.position;
         cameraPosition.x = Mathf.Max(cameraPosition.x, player.position.x);
         transform.position = cameraPosition;
+
+        if (player.position.y >= 2)
+        {
+            cameraPosition = new Vector3 (cameraPosition.x, 6.5f, -10f);
+            transform.position = cameraPosition;
+        }
     }
 
     public void SetUnderground(bool underground)
