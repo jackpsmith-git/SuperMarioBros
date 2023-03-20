@@ -4,9 +4,13 @@ public class Goomba : MonoBehaviour
 {
     public Sprite flatSprite;
     private GameManager gameManager;
+    private GameObject mario;
+    public AudioManager audioManager;
 
     private void Start()
     {
+        mario =  GameObject.FindWithTag("Player");
+        audioManager = mario.GetComponentInChildren<AudioManager>();
         gameManager = FindObjectOfType<GameManager>();
     }
 
@@ -19,6 +23,7 @@ public class Goomba : MonoBehaviour
             if (player.starpower)
             {
                 Hit();
+                audioManager.kick.Play();
                 gameManager.score = gameManager.score + 500;
             }
             else if (collision.transform.DotTest(transform, Vector2.down))
@@ -44,6 +49,7 @@ public class Goomba : MonoBehaviour
 
     private void flatten()
     {
+        audioManager.stomp.Play();
         GetComponent<Collider2D>().enabled = false;
         GetComponent<EntityMovement>().enabled = false;
         GetComponent<AnimatedSprite>().enabled = false;

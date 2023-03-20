@@ -15,11 +15,16 @@ public class Player : MonoBehaviour
     public bool dead => deathAnimation.enabled;
     public bool starpower { get; private set; }
 
+    private GameObject mario;
+    public AudioManager audioManager;
+
     private void Awake()
     {
         deathAnimation = GetComponent<DeathAnimation>();
         capsuleCollider = GetComponent<CapsuleCollider2D>();
         activeRenderer = smallRenderer;
+        mario =  GameObject.FindWithTag("Player");
+        audioManager = mario.GetComponentInChildren<AudioManager>();
     }
 
     public void Hit()
@@ -28,10 +33,12 @@ public class Player : MonoBehaviour
         {
             if (big)
             {
+                audioManager.pipe_powerDown.Play();
                 Shrink();
             }
             else
             {
+                audioManager.marioHit.Play();
                 Death();
             }
         }
@@ -43,6 +50,8 @@ public class Player : MonoBehaviour
         smallRenderer.enabled = false;
         bigRenderer.enabled = false;
         deathAnimation.enabled = true;
+
+        audioManager.overworldTheme.Stop();
 
         GameManager.Instance.ResetLevel(3f);
     }
@@ -67,6 +76,8 @@ public class Player : MonoBehaviour
 
         capsuleCollider.size = new Vector2(1f, 1f);
         capsuleCollider.offset = new Vector2(0f, 0f);
+
+        audioManager.pipe_powerDown.Play();
 
         StartCoroutine(ScaleAnimation());
     }
@@ -105,6 +116,10 @@ public class Player : MonoBehaviour
 
         float elapsed = 0f;
 
+        audioManager.overworldTheme.mute = true;
+        audioManager.undergroundTheme.mute = true;
+        audioManager.starman.Play();
+
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -117,6 +132,10 @@ public class Player : MonoBehaviour
             yield return null;
         }
 
+        audioManager.starman.Stop();
+        audioManager.pipe_powerDown.Play();
+        audioManager.overworldTheme.mute = false;
+        audioManager.undergroundTheme.mute = false;
         activeRenderer.spriteRenderer.color = Color.white;
         starpower = false;
     }

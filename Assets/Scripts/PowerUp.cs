@@ -3,6 +3,8 @@ using UnityEngine;
 public class PowerUp : MonoBehaviour
 {
     private GameManager gameManager;
+    private GameObject mario;
+    public AudioManager audioManager;
 
     public enum Type
     {
@@ -17,6 +19,8 @@ public class PowerUp : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        mario =  GameObject.FindWithTag("Player");
+        audioManager = mario.GetComponentInChildren<AudioManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -34,18 +38,22 @@ public class PowerUp : MonoBehaviour
         {
             case Type.Coin: 
                 GameManager.Instance.AddCoin();
+                audioManager.coin.Play();
                 break;
 
             case Type.ExtraLife: 
                 GameManager.Instance.AddLife();
+                audioManager.oneUp.Play();
                 break;
 
             case Type.MagicMushroom:
                 player.GetComponent<Player>().Grow();
+                audioManager.powerup.Play();
                 break;
 
             case Type.Starpower:
                 player.GetComponent<Player>().Starpower();
+                audioManager.powerup.Play();
                 break;
         }
 

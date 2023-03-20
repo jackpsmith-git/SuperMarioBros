@@ -7,6 +7,14 @@ public class Pipe : MonoBehaviour
     public KeyCode enterKeyCode = KeyCode.S;
     public Vector3 enterDirection = Vector3.down;
     public Vector3 exitDirection = Vector3.zero;
+    private GameObject mario;
+    public AudioManager audioManager;
+
+    void Awake()
+    {
+        mario =  GameObject.FindWithTag("Player");
+        audioManager = mario.GetComponentInChildren<AudioManager>();
+    }
 
     private void OnTriggerStay2D(Collider2D other)
     {
@@ -22,6 +30,7 @@ public class Pipe : MonoBehaviour
     private IEnumerator Enter(Transform player)
     {
         player.GetComponent<PlayerMovement>().enabled = false;
+        audioManager.pipe_powerDown.Play();
 
         Vector3 enteredPosition = transform.position + enterDirection;
         Vector3 enteredScale = Vector3.one / 2;
@@ -31,6 +40,17 @@ public class Pipe : MonoBehaviour
 
         bool underground = connection.position.y < 0f;
         Camera.main.GetComponent<SideScrolling>().SetUnderground(underground);
+
+        if (underground == true)
+        {
+            audioManager.overworldTheme.Stop();
+            audioManager.undergroundTheme.Play();
+        }
+        else
+        {
+            audioManager.undergroundTheme.Stop();
+            audioManager.overworldTheme.Play();
+        }
 
         if (exitDirection != Vector3.zero)
         {

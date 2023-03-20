@@ -9,6 +9,15 @@ public class BlockHit : MonoBehaviour
 
     private bool animating;
 
+    private GameObject mario;
+    public AudioManager audioManager;
+
+    private void Start()
+    {
+        mario =  GameObject.FindWithTag("Player");
+        audioManager = mario.GetComponentInChildren<AudioManager>();
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!animating && maxHits != 0 && collision.gameObject.CompareTag("Player"))
@@ -35,6 +44,10 @@ public class BlockHit : MonoBehaviour
         if (item != null)
         {
             Instantiate(item, transform.position, Quaternion.identity);
+            if (item != null && item.CompareTag("Powerup"))
+            {
+                audioManager.powerupAppears.Play();
+            }
         }
 
         StartCoroutine(Animate());

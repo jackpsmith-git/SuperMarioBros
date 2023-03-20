@@ -9,6 +9,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 velocity;
     private float inputAxis;
 
+    private GameObject mario;
+    public AudioManager audioManager;
+
     public float moveSpeed = 8f;
     public float maxJumpHeight = 5f;
     public float maxJumpTime = 1f;
@@ -25,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
         rigidbody = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
         camera = Camera.main;
+        mario =  GameObject.FindWithTag("Player");
+        audioManager = mario.GetComponentInChildren<AudioManager>();
     }
 
     private void OnEnable()
@@ -85,6 +90,15 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.y = jumpForce;
             jumping = true;
+
+            if (mario.GetComponent<Player>().big)
+            {
+                audioManager.bigJump.Play();
+            }
+            else if (mario.GetComponent<Player>().small)
+            {
+                audioManager.smallJump.Play();
+            }
         }
     }
 

@@ -9,8 +9,13 @@ public class Koopa : MonoBehaviour
     private bool shelled;
     private bool pushed;
 
+    private GameObject mario;
+    public AudioManager audioManager;
+
     private void Start()
     {
+        mario =  GameObject.FindWithTag("Player");
+        audioManager = mario.GetComponentInChildren<AudioManager>();
         gameManager = FindObjectOfType<GameManager>();
     }
 
@@ -23,10 +28,12 @@ public class Koopa : MonoBehaviour
             if (player.starpower)
             {
                 Hit();
+                audioManager.kick.Play();
                 gameManager.score = gameManager.score + 500;
             }
             else if (collision.transform.DotTest(transform, Vector2.down))
             {
+                audioManager.stomp.Play();
                 EnterShell();
                 gameManager.score = gameManager.score + 100;
             }
@@ -43,6 +50,7 @@ public class Koopa : MonoBehaviour
         {
             if (!pushed)
             {
+                audioManager.kick.Play();
                 Vector2 direction = new Vector2(transform.position.x - other.transform.position.x, 0f);
                 PushShell(direction);
                 gameManager.score = gameManager.score + 800;

@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class BlockCoin : MonoBehaviour
 {
+    private GameObject mario;
+    public AudioManager audioManager;
+
     private void Start()
     {
+        mario =  GameObject.FindWithTag("Player");
+        audioManager = mario.GetComponentInChildren<AudioManager>();
         GameManager.Instance.AddCoin();
 
         StartCoroutine(Animate());
@@ -16,6 +21,7 @@ public class BlockCoin : MonoBehaviour
         Vector3 animatedPosition = restingPosition + Vector3.up * 2f;
 
         yield return Move(restingPosition, animatedPosition);
+        audioManager.coin.Play();
         yield return Move(animatedPosition, restingPosition);
 
         Destroy(gameObject);

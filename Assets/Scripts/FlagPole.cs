@@ -10,17 +10,27 @@ public class FlagPole : MonoBehaviour
     public int nextWorld = 1;
     public int nextStage = 1;
     private GameManager gameManager;
+    private GameObject mario;
+    public AudioManager audioManager;
 
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        mario =  GameObject.FindWithTag("Player");
+        audioManager = mario.GetComponentInChildren<AudioManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
+            gameManager.timeActive = false;
             gameManager.score = gameManager.score + 5000;
+            gameManager.score = gameManager.score + (Mathf.RoundToInt(gameManager.timeRemaining) * 50);
+            gameManager.timeRemaining = 0;
+            audioManager.overworldTheme.Stop();
+            audioManager.undergroundTheme.Stop();
+            audioManager.flagpole.Play();
             StartCoroutine(MoveTo(flag, poleBottom.position));
             StartCoroutine(LevelCompleteSequence(other.transform));
         }
@@ -29,15 +39,16 @@ public class FlagPole : MonoBehaviour
     private IEnumerator LevelCompleteSequence(Transform player)
     {
         player.GetComponent<PlayerMovement>().enabled = false;
+        audioManager.stageClear.Play();
 
         yield return MoveTo(player, poleBottom.position);
         yield return MoveTo(player, player.position + Vector3.right);
         yield return MoveTo(player, player.position + Vector3.right + Vector3.down);
         yield return MoveTo(player, castle.position);
 
-        player.gameObject.SetActive(false);
+        mario.GetComponentInChildren<SpriteRenderer>().enabled = false;
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(6f);
 
         GameManager.Instance.LoadLevel(nextWorld, nextStage);
     }
